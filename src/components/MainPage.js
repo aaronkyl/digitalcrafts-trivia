@@ -26,10 +26,21 @@ class Question extends Component {
         this.setState({ answers: [...this.state.answers, this.props.question.correct_answer] });
     }
     
+    // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array/46161940
+    shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // eslint-disable-line no-param-reassign
+        }
+    }
+    
     render() {
         let answerList = this.state.answers.map(answer => {
             return <Answer answer={answer} />;
         });
+        
+        this.shuffleArray(answerList);
+        
         return (
             <div>
             <li dangerouslySetInnerHTML={{__html: this.state.question}} />
