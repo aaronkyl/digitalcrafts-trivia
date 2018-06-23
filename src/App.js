@@ -1,19 +1,49 @@
 import React, { Component } from 'react';
+import { Router, Route } from 'react-router';
+import createBrowserHistory from 'history/createBrowserHistory';
+import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
+import { MainPage } from './components/MainPage.js';
+import { Questions } from './components/Questions.js';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      categories: [],
+      playCategory: "9",
+      questions: []
+    };
+    this.selectCategory = this.selectCategory.bind(this);
+  }
+  
+  componentDidMount() {
+    axios.get('https://opentdb.com/api_category.php')
+    .then(response => {
+        let fetchedData = response.data.trivia_categories;
+        this.setState({
+            categories: fetchedData
+        });
+    })
+    .catch(error => console.log(error));
+  }
+  
+  selectCategory(e) {
+    this.setState({
+        playCategory: e.target.value
+    });
+  }
+  
   render() {
+    const history = createBrowserHistory();
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Router history={history}>
+        <div>
+          <Route exact path="/" render={(props) => <MainPage {...props} playCategory={this.state.playCategory} categories={this.state.categories} selectCategory={this.selectCategory} />} />
+          <Route path="/questions" render={(props) => <Questions {...props} playCategory={this.state.playCategory} />} />
+        </div>
+      </Router>
     );
   }
 }
