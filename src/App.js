@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Router, Route } from 'react-router';
 import createBrowserHistory from 'history/createBrowserHistory';
 import axios from 'axios';
-import logo from './logo.svg';
 import './App.css';
 import { MainPage } from './components/MainPage.js';
 import { Questions } from './components/Questions.js';
@@ -11,7 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      categories: [],
+      categories: null,
       playCategory: "9",
       questions: []
     };
