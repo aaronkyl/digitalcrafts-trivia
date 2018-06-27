@@ -5,10 +5,24 @@ import axios from 'axios';
 class Answer extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            result: 'notSelected'
+        };
+        this.checkAnswer = this.checkAnswer.bind(this);
+    }
+    
+    checkAnswer(e) {
+        console.log('checking answer');
+        let className = this.props.onClick(this.props.value);
+        if (className) {
+            this.setState({
+                result: className
+            });
+        }
     }
 
     render() {
-        return <li>{this.props.answer}</li>;
+        return <li className={this.state.result} onClick={this.checkAnswer} value={this.props.value} dangerouslySetInnerHTML={{__html: this.props.answer}} />;
     }
 }
 
@@ -18,12 +32,16 @@ class Question extends Component {
         this.state = {
             question: props.question.question,
             answers: props.question.incorrect_answers,
-            correctAnswer: props.question.correct_answer
+            correctAnswer: props.question.correct_answer,
+            answered: false
         };
+        this.checkAnswer = this.checkAnswer.bind(this);
     }
     
     componentDidMount() {
-        this.setState({ answers: [...this.state.answers, this.props.question.correct_answer] });
+        let newAnswerList = [...this.state.answers, this.props.question.correct_answer];
+        this.shuffleArray(newAnswerList);
+        this.setState({ answers: newAnswerList });
     }
     
     // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array/46161940
@@ -34,12 +52,30 @@ class Question extends Component {
         }
     }
     
+    checkAnswer(answer) {
+        if(this.state.answered) {
+            return false;
+        } else {
+            this.setState({
+                answered: true
+            });
+            console.log('selected answer: ', answer);
+            let className;
+            console.log('correct answer', this.state.correctAnswer);
+            if (answer == this.state.correctAnswer) {
+                className = 'correctAnswer';
+                this.props.increaseScore();
+            } else {
+                className = 'wrongAnswer';
+            }
+            return className;
+        }
+    }
+    
     render() {
-        let answerList = this.state.answers.map(answer => {
-            return <Answer answer={answer} />;
+        let answerList = this.state.answers.map((answer, i) => {
+            return <Answer answer={answer} key={i} onClick={this.checkAnswer} value={answer}/>;
         });
-        
-        this.shuffleArray(answerList);
         
         return (
             <div>
@@ -56,14 +92,23 @@ export class MainPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            questions: []
+            questions: [],
+            score: 0
         };
         this.listCategory = this.listCategory.bind(this);
         this.submitCategorySelection = this.submitCategorySelection.bind(this);
+        this.increaseScore = this.increaseScore.bind(this);
     }
     
     listCategory(cat) {
         return <option key={cat.id} value={cat.id}>{cat.name}</option>;
+    }
+    
+    increaseScore() {
+        let newScore = this.state.score + 1;
+        this.setState({
+            score: newScore
+        });
     }
     
     submitCategorySelection() {
@@ -82,8 +127,8 @@ export class MainPage extends Component {
     }
     
     render() {
-        let questionList = this.state.questions.map((ques) => {
-            return <Question question={ques} />;
+        let questionList = this.state.questions.map((ques, i) => {
+            return <Question key={i} question={ques} increaseScore={this.increaseScore}/>;
         });
         
         return (
@@ -93,6 +138,7 @@ export class MainPage extends Component {
                     {this.props.categories.map(this.listCategory)}
                 </select>
                 <button onClick={this.submitCategorySelection}>Let's Play!</button>
+                <p>Score: {this.state.score}</p>
                 <ul>
                     {questionList}
                 </ul>
