@@ -12,7 +12,6 @@ class Answer extends Component {
     }
     
     checkAnswer(e) {
-        console.log('checking answer');
         let className = this.props.onClick(this.props.value);
         if (className) {
             this.setState({
@@ -22,7 +21,7 @@ class Answer extends Component {
     }
 
     render() {
-        return <li className={this.state.result} onClick={this.checkAnswer} value={this.props.value} dangerouslySetInnerHTML={{__html: this.props.answer}} />;
+        return <li className={['answer-choice', this.state.result].join(' ')} onClick={this.checkAnswer} value={this.props.value} dangerouslySetInnerHTML={{__html: this.props.answer}} />;
     }
 }
 
@@ -59,15 +58,14 @@ class Question extends Component {
             this.setState({
                 answered: true
             });
-            console.log('selected answer: ', answer);
             let className;
-            console.log('correct answer', this.state.correctAnswer);
-            if (answer == this.state.correctAnswer) {
+            if (answer === this.state.correctAnswer) {
                 className = 'correctAnswer';
                 this.props.increaseScore();
             } else {
                 className = 'wrongAnswer';
             }
+            this.props.nextQuestion();
             return className;
         }
     }
@@ -78,9 +76,9 @@ class Question extends Component {
         });
         
         return (
-            <div>
-            <li dangerouslySetInnerHTML={{__html: this.state.question}} />
-            <ul>
+            <div className="question-div">
+            <li className="question-text" dangerouslySetInnerHTML={{__html: this.state.question}} />
+            <ul className="answer-list-div">
                 {answerList}
             </ul>
             </div>
@@ -93,11 +91,13 @@ export class MainPage extends Component {
         super(props);
         this.state = {
             questions: [],
+            round: 1,
             score: 0
         };
         this.listCategory = this.listCategory.bind(this);
         this.submitCategorySelection = this.submitCategorySelection.bind(this);
         this.increaseScore = this.increaseScore.bind(this);
+        this.nextQuestion = this.nextQuestion.bind(this);
     }
     
     listCategory(cat) {
@@ -111,11 +111,16 @@ export class MainPage extends Component {
         });
     }
     
+    nextQuestion() {
+        let newRound = this.state.round + 1;
+        this.setState({
+            round: newRound
+        });
+    }
+    
     submitCategorySelection() {
-        console.log("https://opentdb.com/api.php?amount=10&category=" + this.props.playCategory);
         axios.get("https://opentdb.com/api.php?amount=10&category=" + this.props.playCategory)
         .then(response => {
-            console.log(response.data.results);
             return response.data.results;
         })
         .then(rawData => {
@@ -127,15 +132,24 @@ export class MainPage extends Component {
     }
     
     render() {
-        let questionList = this.state.questions.map((ques, i) => {
-            return <Question key={i} question={ques} increaseScore={this.increaseScore}/>;
+        let questions = this.state.questions.map((ques, i) => {
+            return <Question key={i} question={ques} increaseScore={this.increaseScore} nextQuestion={this.nextQuestion}/>;
         });
+        
+        let questionList = questions.slice(0, this.state.round);
+        
+        let categories;
+        if (this.props.categories) {
+            categories = this.props.categories.map(this.listCategory);
+        } else {
+            categories = 'pending';
+        }
         
         return (
             <div>
                 <p>Select a category!</p>
                 <select id="categorySelection" onChange={this.props.selectCategory}>
-                    {this.props.categories.map(this.listCategory)}
+                    {categories}
                 </select>
                 <button onClick={this.submitCategorySelection}>Let's Play!</button>
                 <p>Score: {this.state.score}</p>
