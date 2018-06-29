@@ -11,8 +11,7 @@ class App extends Component {
     super(props);
     this.state = {
       categories: null,
-      playCategory: "9",
-      questions: []
+      playCategory: "9"
     };
     this.selectCategory = this.selectCategory.bind(this);
   }

@@ -1,3 +1,5 @@
+/** { border: 1px solid red; }*/
+
 .App {
   text-align: center;
 }
@@ -28,9 +30,49 @@
 }
 
 .correctAnswer {
-  background-color: green;
+  background-color: green !important;
 }
 
 .wrongAnswer {
-  background-color: red;
+  background-color: red !important;
+}
+
+
+.question-list-ul {
+  list-style-type: none;
+  padding: 0 50px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.question-div {
+  margin-top: 20px;
+  border: 2px solid darkgrey;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.question-text {
+  text-align: center;
+  font-size: 1.25em;
+  padding: 10px;
+}
+
+.answer-list-div {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  justify-content: center;
+}
+
+.answer-choice {
+  width: 40%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #EAEDEC;
+  border: 1px solid darkgrey;
+  border-radius: 5px;
+  margin: 5px;
 }

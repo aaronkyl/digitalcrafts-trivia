@@ -21,7 +21,7 @@ class Answer extends Component {
     }
 
     render() {
-        return <li className={['answer-choice', this.state.result].join(' ')} onClick={this.checkAnswer} value={this.props.value} dangerouslySetInnerHTML={{__html: this.props.answer}} />;
+        return <li className={['answer-choice', this.state.result].join(' ')} onClick={this.checkAnswer} value={this.props.value} dangerouslySetInnerHTML={{__html: '<span className="answer-text">' + this.props.answer + '</span>'}} />;
     }
 }
 
@@ -121,6 +121,9 @@ export class MainPage extends Component {
     submitCategorySelection() {
         axios.get("https://opentdb.com/api.php?amount=10&category=" + this.props.playCategory)
         .then(response => {
+            this.setState({
+                questions: []
+            });
             return response.data.results;
         })
         .then(rawData => {
@@ -135,7 +138,7 @@ export class MainPage extends Component {
         let questions = this.state.questions.map((ques, i) => {
             return <Question key={i} question={ques} increaseScore={this.increaseScore} nextQuestion={this.nextQuestion}/>;
         });
-        
+
         let questionList = questions.slice(0, this.state.round);
         
         let categories;
@@ -153,7 +156,7 @@ export class MainPage extends Component {
                 </select>
                 <button onClick={this.submitCategorySelection}>Let's Play!</button>
                 <p>Score: {this.state.score}</p>
-                <ul>
+                <ul className="question-list-ul">
                     {questionList}
                 </ul>
             </div>
