@@ -29,6 +29,16 @@
   to { transform: rotate(360deg); }
 }
 
+#root {
+  padding: 25px;
+}
+
+#game-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .correctAnswer {
   background-color: green !important;
 }
@@ -55,7 +65,9 @@
 .question-text {
   text-align: center;
   font-size: 1.25em;
-  padding: 10px;
+  padding: 10px 10px 20px 10px;
+  border-bottom: 2px solid darkgrey;
+  margin: 0 -10px;
 }
 
 .answer-list-div {
@@ -63,6 +75,8 @@
   flex-wrap: wrap;
   list-style-type: none;
   justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 10px;
 }
 
 .answer-choice {
@@ -71,7 +85,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #EAEDEC;
   border: 1px solid darkgrey;
   border-radius: 5px;
   margin: 5px;

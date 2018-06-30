@@ -51,23 +51,24 @@ class Question extends Component {
         }
     }
     
+    //split this into smaller functions
     checkAnswer(answer) {
         if(this.state.answered) {
             return false;
-        } else {
-            this.setState({
-                answered: true
-            });
-            let className;
-            if (answer === this.state.correctAnswer) {
-                className = 'correctAnswer';
-                this.props.increaseScore();
-            } else {
-                className = 'wrongAnswer';
-            }
-            this.props.nextQuestion();
-            return className;
         }
+        
+        this.setState({
+            answered: true
+        });
+        let className;
+        if (answer === this.state.correctAnswer) {
+            className = 'correctAnswer';
+            this.props.increaseScore();
+        } else {
+            className = 'wrongAnswer';
+        }
+        setTimeout(this.props.nextQuestion.bind(this),1000);
+        return className;
     }
     
     render() {
@@ -139,7 +140,7 @@ export class MainPage extends Component {
             return <Question key={i} question={ques} increaseScore={this.increaseScore} nextQuestion={this.nextQuestion}/>;
         });
 
-        let questionList = questions.slice(0, this.state.round);
+        let questionList = questions.slice(this.state.round - 1, this.state.round);
         
         let categories;
         if (this.props.categories) {
@@ -149,8 +150,10 @@ export class MainPage extends Component {
         }
         
         return (
-            <div>
-                <p>Select a category!</p>
+            <div id="game-div">
+                <h1>AKW TRIVIA</h1>
+                <h2>It's trivia time, y'all!</h2>
+                <p>Select a category to begin...</p>
                 <select id="categorySelection" onChange={this.props.selectCategory}>
                     {categories}
                 </select>
