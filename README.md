@@ -1,3 +1,12 @@
+### Things I learned in this project
+
+- Strengthened my understanding of the most dreaded JavaScript word: 'this'
+- Became comfortable with the idea of components and how they can be controlled with CSS
+- Learned about the spread operator
+  - [Chris](https://github.com/oakmac) taught me a quick JSON hack for performing deep copies of objects
+  - Hack does not work if object contains any functions
+
+
 ### Issues faced during this project
 
 - Passing functions to child components to update parent state
