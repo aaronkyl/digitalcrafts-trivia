@@ -1,3 +1,5 @@
+Basic trivia game built with React
+
 ### Things I learned in this project
 
 - Strengthened my understanding of the most dreaded JavaScript word: 'this'
