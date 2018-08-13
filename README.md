@@ -12,7 +12,7 @@ Basic trivia game built with React
 ### Issues faced during this project
 
 - Passing functions to child components to update parent state
-  - Once it clicked it clicked, but getting to that point was defeinitely a journey
+  - Once it clicked it clicked, but getting to that point was definitely a journey
 - Learning JavaScript DOM events
   - Up until this point I was used to jQuery, so learning the language's built-in DOM events was great
 
